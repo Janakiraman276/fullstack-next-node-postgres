@@ -51,15 +51,12 @@ jobs:
     - name: Tag, and Push the Image to Amazon ECR
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       env:
-        FRONTEND_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        BACKEND_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        
-        
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }} 
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $FRONTEND_ECR_REGISTRY
-        docker tag frontend $FRONTEND_ECR_REGISTRY/frontend-repo:latest
-        docker push $FRONTEND_ECR_REGISTRY/frontend-repo:latest
+        docker tag frontend $ECR_REGISTRY/frontend-repo:latest
+        docker push $ECR_REGISTRY/frontend-repo:latest
         
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $BACKEND_ECR_REGISTRY
-        docker tag backend $BACKEND_ECR_REGISTRY/backend-repo:latest
-        docker push $BACKEND_ECR_REGISTRY/backend-repo:latest
+        docker tag backend $ECR_REGISTRY/backend-repo:latest
+        docker push $ECR_REGISTRY/backend-repo:latest
