@@ -36,15 +36,24 @@ jobs:
       run: |
         docker-compose up -d
         docker-compose down
+        
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: ap-south-1
+        
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1  
 
-    - name: Push to ECR
+    - name: Tag, and Push the Image to Amazon ECR
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       env:
         FRONTEND_ECR_REGISTRY: ${{ secrets.FRONTEND_ECR_REGISTRY }}
         BACKEND_ECR_REGISTRY: ${{ secrets.BACKEND_ECR_REGISTRY }}
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: ap-south-1
+        
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $FRONTEND_ECR_REGISTRY
         docker tag frontend $FRONTEND_ECR_REGISTRY/frontend:latest
