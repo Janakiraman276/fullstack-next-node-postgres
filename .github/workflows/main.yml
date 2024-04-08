@@ -58,9 +58,9 @@ jobs:
         
       run: |
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $FRONTEND_ECR_REGISTRY
-        docker tag frontend $FRONTEND_ECR_REGISTRY/frontend:latest
-        docker push $FRONTEND_ECR_REGISTRY/frontend:latest
+        docker tag frontend $FRONTEND_ECR_REGISTRY/${{ secrets.FRONTEND_ECR_REGISTRY }}:latest
+        docker push $FRONTEND_ECR_REGISTRY/${{ secrets.FRONTEND_ECR_REGISTRY }}:latest
         
         aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $BACKEND_ECR_REGISTRY
-        docker tag backend $BACKEND_ECR_REGISTRY/backend:latest
-        docker push $BACKEND_ECR_REGISTRY/backend:latest
+        docker tag backend $BACKEND_ECR_REGISTRY/${{ secrets.BACKEND_ECR_REGISTRY }}:latest
+        docker push $BACKEND_ECR_REGISTRY/${{ secrets.BACKEND_ECR_REGISTRY }}:latest
