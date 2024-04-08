@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: web_app
+  name: postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+        - name: postgresql-db
+          image: postgres:12
+          ports:
+            - containerPort: 5432
+          resources:
+      limits:
+        cpu: 0.5
+        memory: "512Mi"
+      requests:
+        cpu: 0.1
+        memory: "256Mi"
+        env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: postgresql-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: postgresql-password
+            - name: POSTGRES_DB
+              value: posrgres
+        volumeMounts:
+            - name: postgresql-volume
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgresql-volume
+          persistentVolumeClaim:
+            claimName: postgresql-volume-claim
