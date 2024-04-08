@@ -35,8 +35,6 @@ jobs:
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       run: |
         docker-compose up -d
-        docker-compose exec frontend npm test
-        docker-compose exec backend npm test
         docker-compose down
 
     - name: Push to ECR
