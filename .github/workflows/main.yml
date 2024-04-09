@@ -46,7 +46,8 @@ jobs:
     - name: Tag, and Push the Image to Amazon ECR
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       env:
-        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }} 
+        FRONTEND_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        BACKEND_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
       run: |
         aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
         docker tag frontend $ECR_REGISTRY/frontend-repo:latest
