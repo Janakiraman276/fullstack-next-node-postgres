@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: web_app
+  namespace: web-app
   name: postgresql
 spec:
   replicas: 1
